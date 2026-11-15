@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { fetchPage } = vi.hoisted(() => ({ fetchPage: vi.fn() }))
 vi.mock('~/shared/api', async (importOriginal) => ({
@@ -14,6 +14,17 @@ import middleware from './cms-page-meta.global'
 
 describe('резервные шапка и футер', () => {
   beforeEach(() => fetchPage.mockReset())
+  afterEach(() => {
+    useRuntimeConfig().public.staticDemo = false
+  })
+
+  it('в статическом демо подставляет локальное меню без запроса к CMS', async () => {
+    useRuntimeConfig().public.staticDemo = true
+    const to = { path: '/aitesting', params: {}, meta: {} }
+    await middleware(to as never, {} as never)
+    expect(to.meta).toMatchObject({ header: { links: expect.any(Array) } })
+    expect(fetchPage).not.toHaveBeenCalled()
+  })
 
   it('использует локальные данные при ошибке CMS', async () => {
     fetchPage.mockRejectedValueOnce(new Error('CMS недоступна'))

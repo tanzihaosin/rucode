@@ -11,6 +11,7 @@ const props = defineProps<{
 }>()
 
 const isOpen = defineModel<boolean>({ required: true })
+const staticDemo = useRuntimeConfig().public.staticDemo
 
 const { formData, errors, status, submitErrorMessage, isValid, touch, submit, reset } =
   useParticipationForm(() => ({ roleGroup: props.roleGroup, eventsGroup: props.eventsGroup }))
@@ -34,11 +35,14 @@ watch(isOpen, (value) => {
         @blur="touch"
       />
 
+      <p v-if="staticDemo" class="text-center text-sm" role="status">
+        Это демонстрационная версия сайта. Отправка заявок недоступна.
+      </p>
       <div class="flex justify-center">
         <button
           type="submit"
           class="rounded-pill cursor-pointer bg-yellow-400 px-10 py-5 text-center font-semibold text-black transition-opacity disabled:opacity-40 max-md:px-5 max-md:py-3"
-          :disabled="status === 'submitting' || !isValid"
+          :disabled="staticDemo || status === 'submitting' || !isValid"
         >
           {{ status === 'submitting' ? 'Отправка…' : 'Отправить форму' }}
         </button>

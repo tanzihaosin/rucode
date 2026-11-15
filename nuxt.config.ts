@@ -1,6 +1,9 @@
 import tailwindcss from '@tailwindcss/vite'
 import type { NuxtPage } from 'nuxt/schema'
 
+const staticDemo = process.env.NUXT_PUBLIC_STATIC_DEMO === '1'
+const baseURL = process.env.NUXT_APP_BASE_URL || '/'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -9,7 +12,7 @@ export default defineNuxtConfig({
     head: {
       title:
         'Всероссийский фестиваль по искусственному интеллекту и алгоритмическому программированию',
-      link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+      link: [{ rel: 'icon', type: 'image/svg+xml', href: `${baseURL}favicon.svg` }],
     },
   },
 
@@ -29,6 +32,7 @@ export default defineNuxtConfig({
     cmsAdminPassword: '',
     cmsAdminUpstream: 'http://127.0.0.1:3100',
     public: {
+      staticDemo,
       // NUXT_PUBLIC_PREVIEW_ADMIN_ORIGINS: адреса админки CMS (через запятую), от которых принимается
       // черновик для предпросмотра. Пусто: принимается от любого окна, в которое встроен сайт.
       previewAdminOrigins: '',
@@ -45,6 +49,28 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'node-server',
+    ...(staticDemo
+      ? {
+          prerender: {
+            crawlLinks: false,
+            routes: [
+              '/',
+              '/aitesting',
+              '/ai_champ',
+              '/award2025',
+              '/award2026',
+              '/capital-2024',
+              '/champ',
+              '/en/champ',
+              '/consortium',
+              '/final-2024',
+              '/mts',
+              '/mws',
+              '/practikum',
+            ],
+          },
+        }
+      : {}),
   },
 
   fonts: {
@@ -77,7 +103,25 @@ export default defineNuxtConfig({
   css: ['~/app/styles/main.css'],
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      ...(staticDemo && baseURL !== '/'
+        ? [
+            {
+              name: 'demo-public-asset-base',
+              enforce: 'pre' as const,
+              transform(code: string, id: string) {
+                if (!/[\\/]src[\\/]/.test(id) || !/\.(vue|ts|css)(\?|$)/.test(id)) return
+                const transformed = code.replace(
+                  /(["'`(])\/(images\/|videos\/|files\/|logo(?:-white)?\.svg)/g,
+                  `$1${baseURL}$2`,
+                )
+                if (transformed !== code) return { code: transformed, map: null }
+              },
+            },
+          ]
+        : []),
+    ],
     build: {
       cssCodeSplit: true,
     },

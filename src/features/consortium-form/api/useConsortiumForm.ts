@@ -40,6 +40,7 @@ export function useConsortiumForm() {
   }
 
   async function submit() {
+    if (useRuntimeConfig().public.staticDemo) return
     touchAll()
     if (!isValid.value) return
 

@@ -76,6 +76,12 @@ export function usePageContent(slug: string, fallback: PageContentFallback) {
     async () => {
       const currentLocale = locale.value as Locale
 
+      if (useRuntimeConfig().public.staticDemo) {
+        const page = await resolveLocalPage(currentLocale)
+        if (!page) throw new Error(`Нет локальных данных страницы ${slug}`)
+        return { page, isFallback: true }
+      }
+
       // CMS отдаёт контент только на языке по умолчанию: для остальных локалей,
       // если есть локальный перевод, используем его, а не русский ответ CMS.
       if (currentLocale !== DEFAULT_LOCALE && sources[currentLocale]) {
@@ -109,7 +115,7 @@ export function usePageContent(slug: string, fallback: PageContentFallback) {
     },
   )
 
-  usePreviewBridge(result.data, slug)
+  if (!useRuntimeConfig().public.staticDemo) usePreviewBridge(result.data, slug)
   usePageMeta(() => result.data.value?.page.meta)
 
   return result

@@ -7,6 +7,7 @@
     "start": "node .output/server/index.mjs",
     "dev": "nuxi typecheck && steiger ./src && vitest run --reporter=minimal && nuxt dev",
     "generate": "nuxt generate",
+    "generate:pages": "nuxt generate && node scripts/pages-font-paths.mjs",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint:fsd": "steiger ./src",

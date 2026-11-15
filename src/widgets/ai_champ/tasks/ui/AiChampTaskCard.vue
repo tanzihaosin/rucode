@@ -23,8 +23,8 @@ defineProps<AiChampTaskCardProps>()
         }"
         :src="
           badge?.variant === 'pro'
-            ? 'images/ai_champ/task-pro.png'
-            : 'images/ai_champ/task-base.png'
+            ? '/images/ai_champ/task-pro.png'
+            : '/images/ai_champ/task-base.png'
         "
         alt=""
       />

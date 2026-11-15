@@ -19,6 +19,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (foreignLocale) return
 
   const path = to.path.replace(/(.)\/+$/, '$1')
+  if (useRuntimeConfig().public.staticDemo) {
+    const local = localPageChrome(path)
+    if (local) {
+      to.meta.header = local.header
+      to.meta.footer = local.footer
+    }
+    return
+  }
   try {
     applyCmsPageMeta(to.meta, await fetchCmsPage(path))
   } catch {

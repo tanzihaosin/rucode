@@ -4,6 +4,7 @@ import ConsortiumFormFields from './ConsortiumFormFields.vue'
 import ConsortiumFormSuccess from './ConsortiumFormSuccess.vue'
 
 const isOpen = defineModel<boolean>({ required: true })
+const staticDemo = useRuntimeConfig().public.staticDemo
 
 const { formData, errors, status, submitErrorMessage, touch, submit, reset } = useConsortiumForm()
 
@@ -19,7 +20,14 @@ watch(isOpen, (value) => {
     <form v-else novalidate class="flex flex-col gap-7 md:gap-10" @submit.prevent="submit">
       <ConsortiumFormFields v-model:form-data="formData" :errors="errors" @blur="touch" />
 
-      <UiAction type="submit" class="mx-auto h-13 w-54" :disabled="status === 'submitting'">
+      <p v-if="staticDemo" class="text-center text-sm" role="status">
+        Это демонстрационная версия сайта. Отправка заявок недоступна.
+      </p>
+      <UiAction
+        type="submit"
+        class="mx-auto h-13 w-54"
+        :disabled="staticDemo || status === 'submitting'"
+      >
         {{ status === 'submitting' ? 'Отправка…' : 'Отправить' }}
       </UiAction>
 

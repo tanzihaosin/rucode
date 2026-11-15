@@ -29,7 +29,14 @@ function mountProbe(
 
 describe('usePageContent', () => {
   afterEach(async () => {
+    useRuntimeConfig().public.staticDemo = false
     await useNuxtApp().$i18n.setLocale('ru')
+  })
+
+  it('в статическом демо использует локальные данные даже при доступной CMS', async () => {
+    useRuntimeConfig().public.staticDemo = true
+    const wrapper = await mountProbe(page('local-demo'), { withCms: true })
+    expect(wrapper.text()).toBe('local-demo')
   })
 
   it('для языка по умолчанию берёт ответ CMS', async () => {

@@ -41,6 +41,7 @@ export function useParticipationForm(getGroups: () => ParticipationGroups = () =
   }
 
   async function submit() {
+    if (useRuntimeConfig().public.staticDemo) return
     touchAll()
     if (!isValid.value) return
 

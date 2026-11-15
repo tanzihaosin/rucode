@@ -7,6 +7,11 @@ import { applyCmsPageMeta, fetchCmsPage } from '~/shared/api'
 // из CMS подставляем в middleware. Для остальных роутов то же делает глобальный `cms-page-meta`.
 definePageMeta({
   middleware: async (to) => {
+    if (useRuntimeConfig().public.staticDemo) {
+      return abortNavigation(
+        createError({ statusCode: 404, message: 'Страница не найдена', fatal: true }),
+      )
+    }
     const slug = `/${[to.params.slug].flat().join('/')}`
     try {
       applyCmsPageMeta(to.meta, await fetchCmsPage(slug))
