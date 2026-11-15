@@ -86,11 +86,11 @@ npm run build         # Production-сборка
 npm run preview       # Локальный просмотр сборки
 ```
 
-Также доступны `npm run format` для форматирования и `npm run generate` для статической генерации. Production-сборка запускается командой `npm start` и требует Node.js. Workflow GitHub Actions при изменениях в `main` проверяет FSD и тесты, собирает приложение, публикует его на тестовом и основном серверах и, если заданы секреты CMS, отправляет манифест блоков.
+Также доступны `npm run format` для форматирования и `npm run generate` для статической генерации. Production-сборка запускается командой `npm start` и требует Node.js. Серверный workflow запускается вручную: он проверяет FSD и тесты, собирает приложение, публикует его на тестовом и основном серверах и, если заданы секреты CMS, отправляет манифест блоков.
 
 ### Статическое демо на GitHub Pages
 
-Отдельный workflow `.github/workflows/pages.yml` собирает демо из локальных данных и публикует `.output/public`. В настройках репозитория выберите **Settings → Pages → Build and deployment → Source: GitHub Actions**. Публикация запускается при изменениях в `main` или вручную через Actions. Существующий workflow для серверов RuCode работает отдельно.
+Отдельный workflow `.github/workflows/pages.yml` собирает демо из локальных данных и публикует `.output/public`. В настройках репозитория выберите **Settings → Pages → Build and deployment → Source: GitHub Actions**. Публикация запускается при изменениях в `main` или вручную через Actions. Workflow для серверов RuCode запускается только вручную.
 
 В демо CMS, предпросмотр CMS и отправка заявок недоступны; формы показывают соответствующее уведомление. Страницы, созданные только в CMS, в статическую сборку не входят. Для локальной сборки с путём как у GitHub Pages задайте `NUXT_PUBLIC_STATIC_DEMO=1`, `NUXT_APP_BASE_URL=/rucode/` и `NUXT_IMAGE_PROVIDER=none`, затем выполните `npm run generate:pages`. Измените базовый путь, если имя репозитория другое.
 

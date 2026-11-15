@@ -1,9 +1,6 @@
 name: Deploy to nuxt.rucode.net and rucode.net
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 # Сборка одна, .output выкладывается в две копии на одном сервере: тестовый стенд и прод.
