@@ -1,11 +1,12 @@
 import { applyCmsPageMeta, fetchCmsPage } from '~/shared/api'
 import { DEFAULT_LOCALE, LOCALES } from '~/shared/config'
+import { localPageChrome } from './local-page-chrome'
 
 /**
  * Шапка и отступ футера статических страниц (`index.vue`, `mts.vue` и др.) живут в CMS, а лейаут читает их
  * из `route.meta` до рендера страницы, поэтому подставляем их здесь. Страницы из CMS (`[...slug].vue`)
  * делают то же в своём middleware и отвечают 404, если страницы нет.
- * Ошибка CMS не мешает странице: она рисуется с шапкой по умолчанию и локальными блоками.
+ * При ошибке CMS используются локальные настройки и блоки страницы.
  */
 export default defineNuxtRouteMiddleware(async (to) => {
   if (to.meta.layout === false || to.params.slug !== undefined) return
@@ -17,9 +18,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
   )
   if (foreignLocale) return
 
+  const path = to.path.replace(/(.)\/+$/, '$1')
   try {
-    applyCmsPageMeta(to.meta, await fetchCmsPage(to.path.replace(/(.)\/+$/, '$1')))
+    applyCmsPageMeta(to.meta, await fetchCmsPage(path))
   } catch {
-    // Нет CMS или страницы в ней: остаются значения из definePageMeta.
+    const local = localPageChrome(path)
+    if (local) {
+      to.meta.header = local.header
+      to.meta.footer = local.footer
+    }
   }
 })
