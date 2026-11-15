@@ -33,4 +33,10 @@ PROJECT_SUMMARY.md
 AGENTS.md
 
 # Other
-docs
+docs/*
+!docs/screenshots/
+docs/screenshots/*
+!docs/screenshots/aitesting.png
+!docs/screenshots/ai-champ.png
+!docs/screenshots/award.png
+!docs/screenshots/champ.png
