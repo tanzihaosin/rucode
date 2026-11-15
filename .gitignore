@@ -1,0 +1,36 @@
+# Nuxt dev/build outputs
+.output
+# скриншоты блоков для каталога в админке CMS (npm run block-shots)
+public/previews
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# AI
+.claude
+CLAUDE.md
+REVIEW.md
+PROJECT_SUMMARY.md
+AGENTS.md
+
+# Other
+docs
